@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import axios from 'axios'
-import {Link, Switch, withRouter, Route } from 'react-router-dom'
+import { withRouter, Link, Switch, Route, Redirect } from 'react-router-dom'
 import './App.css';
+
+import Login from './components/Login'
 
 const apiURL = 'http://localhost:8080/api'
 
-export default withRouter (class App extends Component {
-  constructor (props) {
+export default withRouter ( class App extends Component {
+  constructor ( props ) {
     super ()
     this.state = {
       recipes: [],
-      chapters: []
+      chapters: [],
+      users:[]
     }
   }
 
@@ -135,21 +138,25 @@ export default withRouter (class App extends Component {
       .then ( res => {
         this.setState (
           {
-            users: res.data
+            currentUser: res.data
           }
         )
       })
   }
-  getUser = () => {
+  getUser = (e) => {
+    e.preventDefault ()
     axios
       .get ( `${apiURL}/users/:id` )
       .then ( res => {
+        this.props.history.push ('/')
         this.setState (
           {
-            users: res.data
+            currentUser: res.data
           }
         )
+        console.log (this.state.currentUser)
       })
+      .catch (error => console.log (error))
   }
   postUser = () => {
     axios
@@ -157,9 +164,10 @@ export default withRouter (class App extends Component {
       .then ( res => {
         this.setState (
           {
-            users: res.data
+            currentUser: res.data
           }
         )
+        console.log (this.state.currentUser)
       })
   }
   putUser = () => {
@@ -187,6 +195,7 @@ export default withRouter (class App extends Component {
   }
 
   handleFormChange = e => {
+    console.log (e.target)
     this.setState (
       {
         [e.target.name]: e.target.value
@@ -194,11 +203,19 @@ export default withRouter (class App extends Component {
     )
   }
   
+  handleLogin = (emailAddress) => {
+    
+  }
+
+  componentDidMount () { 
+    this.getUsers () 
+  }
+
   render () {
     return (
       <div className="App">
         <header className="App-header">
-          <Link to = '/'>
+          <Link to = '/login'>
             Login
           </Link>
           <Link to = "/register">
@@ -210,7 +227,23 @@ export default withRouter (class App extends Component {
         </header>
         <main>
           <Switch>
-            <Route />
+            <Route 
+              exact path = '/login'
+              render = {
+                () => <Login
+                  users = {this.state.users}
+                  // getUsers = {this.getUsers}
+                  handleSubmimt = {this.postUser}
+                  handleFormChange = {this.handleFormChange}
+                />
+              }
+            />
+            <Route
+              path = '*'
+              render = {
+                () => <Redirect to = '/' />
+              }
+            />
           </Switch>
         </main>
       </div>
