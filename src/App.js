@@ -4,6 +4,7 @@ import { withRouter, Link, Switch, Route, Redirect } from 'react-router-dom'
 import './App.css';
 
 import Login from './components/Login'
+import Recipes from './components/Recipes'
 
 const apiURL = 'http://localhost:8080/api'
 
@@ -159,15 +160,16 @@ export default withRouter ( class App extends Component {
       .catch (error => console.log (error))
   }
   postUser = () => {
-    axios
-      .post ( `${apiURL}/users`)
+    axios ({
+      method: 'post',
+      url: `${apiURL}/users`,
+      data: {
+        email: this.state.currentUser.email
+      }
+    })
       .then ( res => {
-        this.setState (
-          {
-            currentUser: res.data
-          }
-        )
-        console.log (this.state.currentUser)
+        console.log(res.body)
+    this.props.history.push ('/recipes')
       })
   }
   putUser = () => {
@@ -193,48 +195,49 @@ export default withRouter ( class App extends Component {
         )
       })
   }
-
+  
   handleFormChange = e => {
-    console.log (e.target)
     this.setState (
       {
         [e.target.name]: e.target.value
       }
     )
   }
-  
-  handleLogin = (emailAddress) => {
-    
-  }
-
-  componentDidMount () { 
-    this.getUsers () 
-  }
 
   render () {
     return (
       <div className="App">
         <header className="App-header">
-          <Link to = '/login'>
+          <Link to = '/'>
             Login
           </Link>
+          <p></p>
           <Link to = "/register">
             Register New User
           </Link>
-          <Link to ="/cookbook">
-            COOKBOOK Home Page
+          <p></p>
+          <Link to ="/recipes">
+            recipes
           </Link>
         </header>
         <main>
           <Switch>
             <Route 
-              exact path = '/login'
+              exact path = '/'
               render = {
                 () => <Login
                   users = {this.state.users}
-                  // getUsers = {this.getUsers}
                   handleSubmimt = {this.postUser}
                   handleFormChange = {this.handleFormChange}
+                />
+              }
+            />
+            <Route 
+              path = '/recipes'
+              render = {
+                () => <Recipes
+                  currentUser = {this.state.currentUser}
+                  handleGetRecipes = {this.getRecipes}
                 />
               }
             />

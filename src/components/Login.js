@@ -16,8 +16,6 @@ export default function Login(props) {
           type='submit'
         />
       </form>
-
     </div>
-
   )
 }
