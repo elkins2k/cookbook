@@ -277,11 +277,12 @@ export default withRouter(class App extends Component {
             />
             <Route
               exact path='/recipes'
-              render={
-                () => <Recipes
-                  recipes={this.state.recipes}
-                />
-              }
+                render = {
+                  () => <Recipes
+                    recipes= {this.state.recipes}
+                    getRecipes= {this.getRecipes}
+                  />
+                }
             />
             <Route
               path='/user/:id'
@@ -302,7 +303,10 @@ export default withRouter(class App extends Component {
               }
             />
           </Switch>
+      
+{/* // */}
         </main>
+       {/* <Home />  */}
       </div>
     )
   }
