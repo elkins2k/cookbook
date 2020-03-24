@@ -1,15 +1,22 @@
 header {
   text-align: center;
-  background-color: #282c34;
+  background-color: lightgrey;
   min-height: 10vh;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  
+  justify-content: space-around;
+  
+}
+header div {
   align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
+ 
+}
+
+header div a {
   text-decoration: none;
-  text-decoration-color: white;
 }
 
 main {

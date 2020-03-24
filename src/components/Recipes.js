@@ -1,10 +1,10 @@
 import React from 'react';
 
 export default function Recipes(props) {
-    console.log(props.currentUser)
-  return (
+  console.log (props)
+    return (
     <div>
-      {props.currentUser}
+      recipe list
     </div>
   )
 }

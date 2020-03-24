@@ -4,26 +4,28 @@ import { withRouter, Link, Switch, Route, Redirect } from 'react-router-dom'
 import './App.css';
 
 import Login from './components/Login'
+import User from './components/User'
 import Recipes from './components/Recipes'
 
 const apiURL = 'http://localhost:8080/api'
 
-export default withRouter ( class App extends Component {
-  constructor ( props ) {
-    super ()
+export default withRouter(class App extends Component {
+  constructor(props) {
+    super()
     this.state = {
       recipes: [],
       chapters: [],
-      users:[]
+      users: [],
+      user_id: ''
     }
   }
 
   // ***** RECIPE(S) ROUTER FUNCTIONS *****
   getRecipes = () => {
     axios
-      .get ( `${apiURL}/recipes` )
-      .then ( res => {
-        this.setState (
+      .get(`${apiURL}/recipes`)
+      .then(res => {
+        this.setState(
           {
             recipes: res.data
           }
@@ -32,9 +34,9 @@ export default withRouter ( class App extends Component {
   }
   getRecipe = () => {
     axios
-      .get ( `${apiURL}/recipes/:id` )
-      .then ( res => {
-        this.setState (
+      .get(`${apiURL}/recipes/:id`)
+      .then(res => {
+        this.setState(
           {
             recipes: res.data
           }
@@ -43,9 +45,9 @@ export default withRouter ( class App extends Component {
   }
   postRecipe = () => {
     axios
-      .post ( `${apiURL}/recipes`)
-      .then ( res => {
-        this.setState (
+      .post(`${apiURL}/recipes`)
+      .then(res => {
+        this.setState(
           {
             recipes: res.data
           }
@@ -54,9 +56,9 @@ export default withRouter ( class App extends Component {
   }
   putRecipe = () => {
     axios
-      .put ( `${apiURL}/recipes/:id` )
-      .then ( res => {
-        this.setState (
+      .put(`${apiURL}/recipes/:id`)
+      .then(res => {
+        this.setState(
           {
             recipes: res.data
           }
@@ -65,22 +67,22 @@ export default withRouter ( class App extends Component {
   }
   deleteRecipe = () => {
     axios
-      .delete ( `${apiURL}/recipes/:id` )
-      .then ( res => {
-        this.props.history.push ('/')
-        this.setState (
+      .delete(`${apiURL}/recipes/:id`)
+      .then(res => {
+        this.props.history.push('/')
+        this.setState(
           {
             recipes: res.data
           }
         )
       })
   }
-// ***** CHAPTER(S) ROUTER FUNCTIONS *****
+  // ***** CHAPTER(S) ROUTER FUNCTIONS *****
   getChapters = () => {
     axios
-      .get ( `${apiURL}/chapters` )
-      .then ( res => {
-        this.setState (
+      .get(`${apiURL}/chapters`)
+      .then(res => {
+        this.setState(
           {
             chapters: res.data
           }
@@ -89,9 +91,9 @@ export default withRouter ( class App extends Component {
   }
   getChapter = () => {
     axios
-      .get ( `${apiURL}/chapters/:id` )
-      .then ( res => {
-        this.setState (
+      .get(`${apiURL}/chapters/:id`)
+      .then(res => {
+        this.setState(
           {
             chapters: res.data
           }
@@ -100,9 +102,9 @@ export default withRouter ( class App extends Component {
   }
   postChapter = () => {
     axios
-      .post ( `${apiURL}/chapters`)
-      .then ( res => {
-        this.setState (
+      .post(`${apiURL}/chapters`)
+      .then(res => {
+        this.setState(
           {
             chapters: res.data
           }
@@ -111,9 +113,9 @@ export default withRouter ( class App extends Component {
   }
   putChapter = () => {
     axios
-      .put ( `${apiURL}/chapters/:id` )
-      .then ( res => {
-        this.setState (
+      .put(`${apiURL}/chapters/:id`)
+      .then(res => {
+        this.setState(
           {
             chapters: res.data
           }
@@ -122,22 +124,22 @@ export default withRouter ( class App extends Component {
   }
   deleteChapter = () => {
     axios
-      .delete ( `${apiURL}/chapters/:id` )
-      .then ( res => {
-        this.props.history.push ('/')
-        this.setState (
+      .delete(`${apiURL}/chapters/:id`)
+      .then(res => {
+        this.props.history.push('/')
+        this.setState(
           {
             chapters: res.data
           }
         )
       })
   }
-// ***** USER(S) ROUTER FUNCTIONS *****
+  // ***** USER(S) ROUTER FUNCTIONS *****
   getUsers = () => {
     axios
-      .get ( `${apiURL}/users` )
-      .then ( res => {
-        this.setState (
+      .get(`${apiURL}/users`)
+      .then(res => {
+        this.setState(
           {
             currentUser: res.data
           }
@@ -145,106 +147,161 @@ export default withRouter ( class App extends Component {
       })
   }
   getUser = (e) => {
-    e.preventDefault ()
+    e.preventDefault()
     axios
-      .get ( `${apiURL}/users/:id` )
-      .then ( res => {
-        this.props.history.push ('/')
-        this.setState (
+      .get(`${apiURL}/users/:id`)
+      .then(res => {
+        this.props.history.push('/')
+        this.setState(
           {
             currentUser: res.data
           }
         )
-        console.log (this.state.currentUser)
+        console.log(this.state.currentUser)
       })
-      .catch (error => console.log (error))
+      .catch(error => console.log(error))
   }
-  postUser = () => {
-    axios ({
+  postUser = (e) => {
+    e.preventDefault()
+    axios({
       method: 'post',
       url: `${apiURL}/users`,
       data: {
-        email: this.state.currentUser.email
+        email: this.state.currentUser
       }
     })
-      .then ( res => {
-        console.log(res.body)
-    this.props.history.push ('/recipes')
+      .then(res => {
+        this.setState({
+          users: res.data
+        })
+        console.log()
+        this.props.history.push(`/user/${res.data[res.data.findIndex(user => {
+          return user.email === this.state.currentUser
+        })]._id}`)
       })
   }
-  putUser = () => {
+  putUser = (e) => {
+    // console.log (e.target.id)
+    // console.log (this.props, this.state)
+    e.preventDefault()
+    if (this.state.newFirstName) {
+      axios({
+        method: 'put',
+        url: `${apiURL}/users/${e.target.id}`,
+        data: { firstName: this.state.newFirstName }
+      })
+        .then(res => {
+          this.setState(
+            {
+              users: res.data,
+              newFirstName: ''
+            }
+          )
+        })
+    } else if (this.state.newLastName) {
+      axios({
+        method: 'put',
+        url: `${apiURL}/users/${e.target.id}`,
+        data: { lastName: this.state.newLastName }
+      })
+        .then(res => {
+          this.setState(
+            {
+              users: res.data,
+              newLastName: ''
+            }
+          )
+        })
+    } else if (this.state.newEmail) {
+      axios({
+        method: 'put',
+        url: `${apiURL}/users/${e.target.id}`,
+        data: { email: this.state.newEmail }
+      })
+        .then(res => {
+          this.setState(
+            {
+              users: res.data,
+              newEmail: ''
+            }
+          )
+        })
+    }
+  }
+  deleteUser = (e) => {
+    e.preventDefault()
     axios
-      .put ( `${apiURL}/users/:id` )
-      .then ( res => {
-        this.setState (
+      .delete(`${apiURL}/users/:id`)
+      .then(res => {
+        this.props.history.push('/')
+        this.setState(
           {
             users: res.data
           }
         )
       })
   }
-  deleteUser = () => {
-    axios
-      .delete ( `${apiURL}/users/:id` )
-      .then ( res => {
-        this.props.history.push ('/')
-        this.setState (
-          {
-            users: res.data
-          }
-        )
-      })
-  }
-  
+
   handleFormChange = e => {
-    this.setState (
+    e.preventDefault()
+    this.setState(
       {
         [e.target.name]: e.target.value
       }
     )
   }
 
-  render () {
+  render() {
     return (
       <div className="App">
         <header className="App-header">
-          <Link to = '/'>
-            Login
+          <div>
+            <Link to='/'>
+              Welcome {this.state.currentUser}
+            </Link>
+          </div>
+          <div>
+            <Link to="/recipes">
+              recipes
           </Link>
-          <p></p>
-          <Link to = "/register">
-            Register New User
-          </Link>
-          <p></p>
-          <Link to ="/recipes">
-            recipes
-          </Link>
+          </div>
         </header>
         <main>
           <Switch>
-            <Route 
-              exact path = '/'
-              render = {
+            <Route
+              exact path='/'
+              render={
                 () => <Login
-                  users = {this.state.users}
-                  handleSubmimt = {this.postUser}
-                  handleFormChange = {this.handleFormChange}
-                />
-              }
-            />
-            <Route 
-              path = '/recipes'
-              render = {
-                () => <Recipes
-                  currentUser = {this.state.currentUser}
-                  handleGetRecipes = {this.getRecipes}
+                  users={this.state.users}
+                  handleSubmit={this.postUser}
+                  handleFormChange={this.handleFormChange}
                 />
               }
             />
             <Route
-              path = '*'
-              render = {
-                () => <Redirect to = '/' />
+              exact path='/recipes'
+              render={
+                () => <Recipes
+                  recipes={this.state.recipes}
+                />
+              }
+            />
+            <Route
+              path='/user/:id'
+              render={
+                routerProps => <User
+                  {...routerProps}
+                  users={this.state.users}
+                  handlePutUser={this.putUser}
+                  handleFormChange={this.handleFormChange}
+                  handleDelete={this.deleteUser}
+                />
+              }
+            />
+            <Route
+              path='*'
+              render={
+                () => <Redirect to='/' />
               }
             />
           </Switch>
