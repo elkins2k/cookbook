@@ -181,8 +181,6 @@ export default withRouter(class App extends Component {
       })
   }
   putUser = (e) => {
-    // console.log (e.target.id)
-    // console.log (this.props, this.state)
     e.preventDefault()
     if (this.state.newFirstName) {
       axios({
@@ -231,7 +229,7 @@ export default withRouter(class App extends Component {
   deleteUser = (e) => {
     e.preventDefault()
     axios
-      .delete(`${apiURL}/users/:id`)
+      .delete(`${apiURL}/users/${e.target.id}`)
       .then(res => {
         this.props.history.push('/')
         this.setState(
