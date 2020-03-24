@@ -247,6 +247,7 @@ export default withRouter ( class App extends Component {
             />
           </Switch>
         </main>
+        <Register />
       </div>
     )
   }

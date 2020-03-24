@@ -1,5 +1,6 @@
 import React, { component } from 'react';
 import axios from 'axios'
+import { register } from '../serviceWorker';
 class Register extends React.Component {    
      
     constructor(props) {
@@ -21,6 +22,30 @@ class Register extends React.Component {
          })
     }
     handleSubmit(event) {
+//axios
+      const {
+          email,
+          password,
+          password_confirmation
+      } = this.state
+
+      axios.post("http://localhost:8080/register", {
+          user: {
+              email: email,
+              password: password,
+              password_confirmation: password_confirmation
+          }
+      },
+ // set cookies   
+      {withCredentials:  true}
+      ).thenr(Response => {
+          console.log("register res", Response);
+      })
+      .catch(error => {
+          console.log("registration error", error)
+      }
+      )
+//end
         console.log("form submitted");
         event.preventDefault();
     }
