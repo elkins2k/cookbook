@@ -174,7 +174,6 @@ export default withRouter(class App extends Component {
         this.setState({
           users: res.data
         })
-        console.log()
         this.props.history.push(`/user/${res.data[res.data.findIndex(user => {
           return user.email === this.state.currentUser
         })]._id}`)
