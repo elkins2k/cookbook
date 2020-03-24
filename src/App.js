@@ -5,6 +5,8 @@ import './App.css';
 
 import Login from './components/Login';
 import Register from './components/Register';
+//import Home from './Home';
+import Recipes from './components/Recipes';
 
 const apiURL = 'http://localhost:8080/api'
 
@@ -239,6 +241,39 @@ export default withRouter ( class App extends Component {
                 />
               }
             />
+ 
+            <Route 
+              exact path = '/Register'
+              render = {
+                () => <Register
+                  users = {this.state.users}
+                  // getUsers = {this.getUsers}
+                  handleSubmimt = {this.postUser}
+                  handleFormChange = {this.handleFormChange}
+                />
+              }
+            />
+
+            <Route 
+              exact path = '/Cookbook'
+              render = {
+                () => <cookbook
+                  users = {this.state.users}
+                  // getUsers = {this.getUsers}
+                  handleSubmimt = {this.postUser}
+                  handleFormChange = {this.handleFormChange}
+                />
+              }
+            />
+                       <Route 
+              exact path = '/Recipes'
+              render = {
+                () => <Recipes
+                  recipes= {this.state.recipes}
+                  getRecipes= {this.getRecipes}
+                />
+              }
+            />
             <Route
               path = '*'
               render = {
@@ -246,8 +281,10 @@ export default withRouter ( class App extends Component {
               }
             />
           </Switch>
+      
+{/* // */}
         </main>
-        <Register />
+       {/* <Home />  */}
       </div>
     )
   }

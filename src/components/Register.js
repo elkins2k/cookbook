@@ -1,6 +1,6 @@
-import React, { component } from 'react';
+import React from 'react';
 import axios from 'axios'
-import { register } from '../serviceWorker';
+//import { register } from '../serviceWorker';
 class Register extends React.Component {    
      
     constructor(props) {
