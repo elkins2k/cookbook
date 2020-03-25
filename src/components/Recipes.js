@@ -1,23 +1,27 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
+import NewRecipe from './NewRecipe'
 export default function Recipes(props) {
-  const allRecipes = props.recipes.map ( recipe => {
+  const allRecipes = props.recipes.map ( (recipe,index) => {
     return(
-      <div>
-        <Link to = {`/recipe/${recipe._id}`}>
-          {recipe}
+      <div key={index}>
+        <Link to = {`/recipes/${recipe._id}`}>
+          {recipe.name}
         </Link>
       </div>
     )
-  }
+  })
 
-  )
   return (
     <div>
-      <Link to = {`/recipes/`}>
-          create new recipe
+      <div>
+        {allRecipes}
+      </div>
+      <div>
+        <Link to = {`/recipes/`}>
+          Create New Recipe
         </Link>
-     {allRecipes}
+      </div>
 
     </div>
 

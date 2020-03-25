@@ -5,7 +5,9 @@ import './App.css';
 
 import Login from './components/Login'
 import User from './components/User'
-import Recipes from './components/Recipes'
+import Chapters from './components/Chapters'
+import ChapterDetails from './components/ChapterDetails'
+import RecipeDetails from './components/RecipeDetails'
 
 const apiURL = 'http://localhost:8080/api'
 
@@ -44,15 +46,22 @@ export default withRouter(class App extends Component {
       })
   }
   postRecipe = () => {
-    axios
-      .post(`${apiURL}/recipes`)
-      .then(res => {
-        this.setState(
-          {
-            recipes: res.data
-          }
-        )
-      })
+    axios({
+      method: "POST",
+      url: `${apiURL}/recipes`,
+      data: {
+        name: this.state.newRecipeName,
+        mainProtein: this.state.newMainProtein,
+        directions: this.state.newDirections,
+        ingredients: this.state.newIngredients,
+      }
+    }).then(newRecipe => {
+      console.log(newRecipe);
+      this.setState(prevState => ({
+        recipes: [...prevState.recipes, newRecipe.data]
+      }));
+      this.props.history.push("/recipes/:id");
+    });
   }
   putRecipe = () => {
     axios
@@ -240,6 +249,7 @@ export default withRouter(class App extends Component {
   }
 
   handleFormChange = e => {
+    console.log (e.target)
     e.preventDefault()
     this.setState(
       {
@@ -248,18 +258,40 @@ export default withRouter(class App extends Component {
     )
   }
 
+  handleNewItem = e => {
+    e.preventDefault();
+    axios({
+      method: "put",
+      url: `${apiURL}/${e.target.id}/newItem`,
+      data: { ingredients: this.state.newItem }
+    }).then(newRecipe => {
+      this.setState({ newItem: "" });
+      this.getRecipes()
+      this.props.history.push(`/recipes/${newRecipe.data._id}`)
+    })
+  }
+
+  componentDidMount () {
+    this.getRecipes()
+    this.getChapters ()
+  }
   render() {
     return (
       <div className="App">
         <header className="App-header">
           <div>
-            <Link to='/'>
+            <Link to='/user/:id'>
               Welcome {this.state.currentUser}
             </Link>
           </div>
           <div>
-            <Link to="/recipes">
-              recipes
+            <Link to="/chapters">
+              Chapters
+            </Link>
+          </div>
+          <div>
+            <Link to="/addNewRecipe">
+              Add New Recipe
           </Link>
           </div>
         </header>
@@ -276,15 +308,6 @@ export default withRouter(class App extends Component {
               }
             />
             <Route
-              exact path='/recipes'
-                render = {
-                  () => <Recipes
-                    recipes= {this.state.recipes}
-                    getRecipes= {this.getRecipes}
-                  />
-                }
-            />
-            <Route
               path='/user/:id'
               render={
                 routerProps => <User
@@ -295,7 +318,50 @@ export default withRouter(class App extends Component {
                   handleDelete={this.deleteUser}
                 />
               }
+            /><Route
+              exact path='/chapters'
+              render={
+                () => <Chapters
+                  chapters={this.state.chapters}
+                />
+              }
             />
+            <Route
+              exact path='/chapters/:id'
+              render={
+                routerProps => <ChapterDetails
+                {...routerProps}
+                chapters={this.state.chapters}
+                recipes={this.state.recipes}
+                />
+              }
+            />
+            <Route
+              exact path='/chapters/:id/:recipeId'
+              render={
+                routerProps => <RecipeDetails
+                  {...routerProps}
+                  putRecipe={this.putRecipe}
+                  recipes={this.state.recipes}
+                  getRecipes={this.getRecipes}
+                  handleFormChange={this.handleFormChange}
+                  handleNewItem = {this.handleNewItem}
+                />
+              }
+            />
+            {/* <Route
+              exact path='/recipes/new'
+              render={
+                () => <NewRecipe
+                  putRecipe={this.putRecipe}
+                  recipes={this.state.recipes}
+                  getRecipes={this.getRecipes}
+                  handleFormChange={this.handleFormChange}
+                  handleNewItem = {this.handleNewItem}
+                />
+              }
+            /> */}
+            
             <Route
               path='*'
               render={
@@ -303,10 +369,7 @@ export default withRouter(class App extends Component {
               }
             />
           </Switch>
-      
-{/* // */}
         </main>
-       {/* <Home />  */}
       </div>
     )
   }
