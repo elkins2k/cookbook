@@ -6,6 +6,7 @@ import './App.css';
 import Login from './components/Login'
 import User from './components/User'
 import Recipes from './components/Recipes'
+// import NewRecipe from './components/NewRecipe';
 
 const apiURL = 'http://localhost:8080/api'
 
@@ -21,6 +22,7 @@ export default withRouter(class App extends Component {
   }
 
   // ***** RECIPE(S) ROUTER FUNCTIONS *****
+  
   getRecipes = () => {
     axios
       .get(`${apiURL}/recipes`)
@@ -43,17 +45,36 @@ export default withRouter(class App extends Component {
         )
       })
   }
+  //Post new Reciipe
   postRecipe = () => {
-    axios
-      .post(`${apiURL}/recipes`)
-      .then(res => {
-        this.setState(
-          {
-            recipes: res.data
-          }
-        )
-      })
+    axios({
+      method: "POST",
+      url: `${apiURL}/recipes`,
+      data: {
+        name: this.state.newUserName,
+        email: this.state.newUserEmail,
+        recipes: this.state.newRecipe
+      }
+    }).then(newUser => {
+      console.log(newUser);
+      this.setState(prevState => ({
+        users: [...prevState.users, newUser.data]
+        // recipes: [...prevState.recipes, NewRecipe.data],
+        // recipes: res.data
+      }));
+      this.props.history.push("/");
+    });
   }
+  //   axios
+  //     .post(`${apiURL}/recipes`)
+  //     .then(res => {
+  //       this.setState(
+  //         {
+  //           recipes: res.data
+  //         }
+  //       )
+  //     })
+  // }
   putRecipe = () => {
     axios
       .put(`${apiURL}/recipes/:id`)
@@ -248,6 +269,34 @@ export default withRouter(class App extends Component {
     )
   }
 
+handleNewIngredient= e =>   {
+  e.preventDefault();
+  axios({
+    method: "post", 
+    url:`${apiURL}/${e.target.id}/newIngredient`,
+    data: {ingredients:this.state.newIngredient}
+  }).then(newRecipe => {
+    this.setState({newIngredient:""});
+    this.getRecipes()
+    this.props.history.push(`/recipes/${newRecipe.data._id}`)
+  })
+}
+//add new recipes
+
+handleNewRecipes= e =>   {
+  e.preventDefault();
+  axios({
+    method: "post", 
+    url:`${apiURL}/${e.target.id}/newRecipe`,
+    data: {recipes:this.state.newRecipe}
+  }).then(newRecipe => {
+    this.setState({newIngredient:""});
+    this.getRecipes()
+    this.props.history.push(`/recipes/${newRecipe.data._id}`)
+  })
+}
+
+//end new recipes
   render() {
     return (
       <div className="App">
@@ -279,8 +328,10 @@ export default withRouter(class App extends Component {
               exact path='/recipes'
                 render = {
                   () => <Recipes
+                    postRecipe={this.postRecipe}
                     recipes= {this.state.recipes}
                     getRecipes= {this.getRecipes}
+                    handleFormChange={this.handleFormChange}
                   />
                 }
             />
