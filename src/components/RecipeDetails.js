@@ -1,9 +1,11 @@
 import React from 'react';
 
 export default function RecipeDetails (props) {
+  console.log (props)
   const recipeDetail = props.recipes.find(recipe => 
     recipe._id === props.match.params.recipeId
   )
+  console.log (recipeDetail)
   const ingredients = recipeDetail.ingredients.map (ingredient => {
     return (
       <li key={ingredient._id}>{ingredient.item}</li>
@@ -11,15 +13,21 @@ export default function RecipeDetails (props) {
   })
   return (
     <div>
-      <p>
+      <h2>
         Name: {recipeDetail.name}
-      </p>
+      </h2>
       <ul>
         {ingredients}
       </ul>
-      <p>
+      <h3>
         Directions: {recipeDetail.directions}
-      </p>
+      </h3>
+      <button 
+        id={recipeDetail._id}
+        onClick={props.handleDelete}
+      >
+        Delete Recipe
+      </button>
     </div>
   )
 }

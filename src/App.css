@@ -22,3 +22,7 @@ header div a {
 main {
   text-align: center;
 }
+
+li {
+  text-decoration: none;
+}
