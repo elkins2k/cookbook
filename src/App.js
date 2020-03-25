@@ -51,18 +51,17 @@ export default withRouter(class App extends Component {
       method: "POST",
       url: `${apiURL}/recipes`,
       data: {
-        name: this.state.newUserName,
-        email: this.state.newUserEmail,
-        recipes: this.state.newRecipe
+        name: this.state.newRecipeName,
+        mainProtein: this.state.newMainProtein,
+        directions: this.state.newDirections,
+        ingredients: this.state.newIngredients,
       }
-    }).then(newUser => {
-      console.log(newUser);
+    }).then(newRecipe => {
+      console.log(newRecipe);
       this.setState(prevState => ({
-        users: [...prevState.users, newUser.data]
-        // recipes: [...prevState.recipes, NewRecipe.data],
-        // recipes: res.data
+        recipes: [...prevState.recipes, newRecipe.data]
       }));
-      this.props.history.push("/");
+      this.props.history.push("/recipes/:id");
     });
   }
   //   axios
