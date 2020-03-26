@@ -19,11 +19,11 @@ export default withRouter(class App extends Component {
       recipes: [],
       chapters: [],
       users: [],
-      user_id: ''
+      user_id: '',
+      newIngredient: ''
     }
   }
 
-  // ***** RECIPE(S) ROUTER FUNCTIONS *****
   getRecipes = () => {
     axios
       .get(`${apiURL}/recipes`)
@@ -35,17 +35,7 @@ export default withRouter(class App extends Component {
         )
       })
   }
-  // getRecipe = () => {
-  //   axios
-  //     .get(`${apiURL}/recipes/:id`)
-  //     .then(res => {
-  //       this.setState(
-  //         {
-  //           recipes: res.data
-  //         }
-  //       )
-  //     })
-  // }
+
   postRecipe = () => {
     axios({
       method: "POST",
@@ -57,24 +47,30 @@ export default withRouter(class App extends Component {
         ingredients: this.state.newIngredients,
       }
     }).then(newRecipe => {
-      console.log(newRecipe);
       this.setState(prevState => ({
         recipes: [...prevState.recipes, newRecipe.data]
       }));
       this.props.history.push("/recipes/:id");
     });
   }
-  // putRecipe = () => {
-  //   axios
-  //     .put(`${apiURL}/recipes/:id`)
-  //     .then(res => {
-  //       this.setState(
-  //         {
-  //           recipes: res.data
-  //         }
-  //       )
-  //     })
-  // }
+  postNewIngredient = (e) => {
+    axios({
+      method: 'POST',
+      url: `${apiURL}/${e.target.id}/newIngredient`,
+      data: {
+        item: this.state.newIngredient
+      }
+    })
+      .then(newRecipe => {
+        this.setState(
+          {
+            newIngredient: ''
+          }
+        )
+        this.getRecipes()
+        this.props.history.push(`/recipe/${newRecipe.data._id}`)
+      })
+  }
   deleteRecipe = (e) => {
     e.preventDefault()
     axios
@@ -88,7 +84,6 @@ export default withRouter(class App extends Component {
         )
       })
   }
-  // ***** CHAPTER(S) ROUTER FUNCTIONS *****
   getChapters = () => {
     axios
       .get(`${apiURL}/chapters`)
@@ -111,56 +106,21 @@ export default withRouter(class App extends Component {
         )
       })
   }
-  // postChapter = () => {
-  //   axios
-  //     .post(`${apiURL}/chapters`)
-  //     .then(res => {
-  //       this.setState(
-  //         {
-  //           chapters: res.data
-  //         }
-  //       )
-  //     })
-  // }
-  // putChapter = () => {
-  //   axios
-  //     .put(`${apiURL}/chapters/:id`)
-  //     .then(res => {
-  //       this.setState(
-  //         {
-  //           chapters: res.data
-  //         }
-  //       )
-  //     })
-  // }
-  // deleteChapter = () => {
-  //   axios
-  //     .delete(`${apiURL}/chapters/:id`)
-  //     .then(res => {
-  //       this.props.history.push('/')
-  //       this.setState(
-  //         {
-  //           chapters: res.data
-  //         }
-  //       )
-  //     })
-  // }
-  // ***** USER(S) ROUTER FUNCTIONS *****
-  // getUsers = () => {
-  //   axios
-  //     .get(`${apiURL}/users`)
-  //     .then(res => {
-  //       this.setState(
-  //         {
-  //           currentUser: res.data
-  //         }
-  //       )
-  //     })
-  // }
+  getUsers = () => {
+    axios
+      .get(`${apiURL}/users`)
+      .then(res => {
+        this.setState(
+          {
+            currentUser: res.data
+          }
+        )
+      })
+  }
   getUser = (e) => {
     e.preventDefault()
     axios
-      .get(`${apiURL}/users/:id`)
+      .get(`${apiURL}/users/${e.target.id}`)
       .then(res => {
         this.props.history.push('/')
         this.setState(
@@ -168,9 +128,8 @@ export default withRouter(class App extends Component {
             currentUser: res.data
           }
         )
-        console.log(this.state.currentUser)
       })
-      .catch(error => console.log(error))
+      .catch(error => console.log('error', error))
   }
   postUser = (e) => {
     e.preventDefault()
@@ -183,11 +142,12 @@ export default withRouter(class App extends Component {
     })
       .then(res => {
         this.setState({
-          users: res.data
+          users: res.data,
+          user_id: res.data[res.data.findIndex(user => {
+            return user.email === this.state.currentUser
+          })]._id
         })
-        this.props.history.push(`/user/${res.data[res.data.findIndex(user => {
-          return user.email === this.state.currentUser
-        })]._id}`)
+        this.props.history.push(`/user/${this.state.user_id}`)
       })
   }
   putUser = (e) => {
@@ -244,12 +204,12 @@ export default withRouter(class App extends Component {
         this.props.history.push('/')
         this.setState(
           {
-            users: res.data
+            users: res.data,
+            currentUser: ''
           }
         )
       })
   }
-
   handleFormChange = e => {
     e.preventDefault()
     this.setState(
@@ -259,29 +219,17 @@ export default withRouter(class App extends Component {
     )
   }
 
-  handleNewItem = e => {
-    e.preventDefault()
-    axios({
-      method: "put",
-      url: `${apiURL}/${e.target.id}/newItem`,
-      data: { ingredients: this.state.newItem }
-    }).then(newRecipe => {
-      this.setState({ newItem: "" });
-      this.getRecipes()
-      this.props.history.push(`/recipes/${newRecipe.data._id}`)
-    })
-  }
-
-  componentDidMount () {
+  componentDidMount() {
     this.getRecipes()
-    this.getChapters ()
+    this.getChapters()
   }
-  render() {
+  
+  render() {  
     return (
       <div className="App">
         <header className="App-header">
           <div>
-            <Link to='/user/:id'>
+            <Link to={`/user/${this.state.user_id}`}>
               Welcome {this.state.currentUser}
             </Link>
           </div>
@@ -331,9 +279,9 @@ export default withRouter(class App extends Component {
               exact path='/chapters/:id'
               render={
                 routerProps => <ChapterDetails
-                {...routerProps}
-                chapters={this.state.chapters}
-                recipes={this.state.recipes}
+                  {...routerProps}
+                  chapters={this.state.chapters}
+                  recipes={this.state.recipes}
                 />
               }
             />
@@ -343,7 +291,7 @@ export default withRouter(class App extends Component {
                 routerProps => <RecipeDetails
                   {...routerProps}
                   handleDelete={this.deleteRecipe}
-                  recipes={this.state.recipes}                  
+                  recipes={this.state.recipes}
                 />
               }
             />
@@ -353,6 +301,7 @@ export default withRouter(class App extends Component {
                 () => <NewRecipe
                   handleFormChange={this.handleFormChange}
                   handleNewRecipe={this.postRecipe}
+                  postNewIngredient = {this.postNewIngredient}
                 />
               }
             />

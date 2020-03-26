@@ -1,10 +1,8 @@
 import React from 'react';
 
 export default function User(props) {
-    console.log('user', props)
     const userDetail = props.users
       .find ( user => user._id === props.match.params.id)
-    console.log ('userDetail', userDetail)
   return (
     <div className = 'userDetail'>
         <h2>
