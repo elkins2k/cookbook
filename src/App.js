@@ -10,7 +10,7 @@ import ChapterDetails from './components/ChapterDetails'
 import RecipeDetails from './components/RecipeDetails'
 import NewRecipe from './components/NewRecipe'
 
-const apiURL = 'http://localhost:8080/api'
+const apiURL = process.env.REACT_APP_BACKEND_APP_URL || 'http://localhost:8080/api'
 
 export default withRouter(class App extends Component {
   constructor(props) {
