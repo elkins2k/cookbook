@@ -5,19 +5,19 @@ export default function RecipeDetails (props) {
     recipe._id === props.match.params.recipeId
   )
   if (props.currentUser === recipeDetail.submittedBy || !recipeDetail.submittedBy) {
-    const ingredients = recipeDetail.ingredients.map (ingredient => {
-      return (
-        <li key={ingredient._id}>
-          {ingredient.item}
-          <button
-            id = {recipeDetail._id}
-            onClick = {props.deleteItem}
-          >
-            del
-          </button>
-        </li>
-      )
-    })
+    // const ingredients = recipeDetail.ingredients.map (ingredient => {
+    //   return (
+    //     <li key={ingredient._id}>
+    //       {ingredient.item}
+    //       <button
+    //         id = {recipeDetail._id}
+    //         onClick = {props.deleteItem}
+    //       >
+    //         del
+    //       </button>
+    //     </li>
+    //   )
+    // })
     return (
       <div>
         <form
@@ -31,24 +31,21 @@ export default function RecipeDetails (props) {
           {/* Main Protein: <input type="text" name="newMainProtein" defaultValue={recipeDetail.mainProtein} /> */}
           Main Protein: {recipeDetail.mainProtein}
           <p></p>
-          <ul>
-            List of Ingredients:
-            {ingredients}
-          </ul>
+          Ingredients: <textarea name="newIngredients" rows='20' columns='100' placeholder='Enter your list of ingredients here...' defaultValue={recipeDetail.ingredients}></textarea> 
           <p></p>
-          Directions: <textarea name="newDirections" rows='10' columns='100' placeholder='Enter directions here...' defaultValue={recipeDetail.directions}></textarea> 
+          Directions: <textarea name="newDirections" rows='20' columns='100' placeholder='Enter directions here...' defaultValue={recipeDetail.directions}></textarea> 
           <p></p>
           <input type="Submit" />
           <p></p>
         </form>
-        <form
+        {/* <form
           onSubmit={props.postNewIngredient}
           onChange={props.handleFormChange}
           id={recipeDetail._id}
         >
           <input type="text" name="newIngredient" placeholder="add ingredient w/amount (ex: 1Cup brown sugar)" size='42'/>
           <input type='submit' value='Add New Ingredient'/>
-        </form>
+        </form> */}
         <p></p>
         <button 
           id={recipeDetail._id}
@@ -62,13 +59,13 @@ export default function RecipeDetails (props) {
       </div>
     )
   } else {
-    const ingredients = recipeDetail.ingredients.map (ingredient => {
-      return (
-        <li key={ingredient._id}>
-          {ingredient.item}
-        </li>
-      )
-    })
+    // const ingredients = recipeDetail.ingredients.map (ingredient => {
+    //   return (
+    //     <li key={ingredient._id}>
+    //       {ingredient.item}
+    //     </li>
+    //   )
+    // })
     return (
       <div>
         <h2>
@@ -77,10 +74,9 @@ export default function RecipeDetails (props) {
         <h3>
           Main Protein: {recipeDetail.mainProtein}
         </h3>
-        <ul>
-          List of Ingredients
-          {ingredients}
-        </ul>
+        <h3>
+          Ingredients: {recipeDetail.ingredients}
+        </h3>
         <h3>
           Directions: {recipeDetail.directions}
         </h3>
