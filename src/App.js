@@ -20,7 +20,7 @@ export default withRouter(class App extends Component {
       chapters: [],
       users: [],
       user_id: '',
-      newIngredient: ''
+      newIngredients: []
     }
   }
 
@@ -35,8 +35,8 @@ export default withRouter(class App extends Component {
         )
       })
   }
-
-  postRecipe = () => {
+  postRecipe = (e) => {
+    e.preventDefault()
     axios({
       method: "POST",
       url: `${apiURL}/recipes`,
@@ -45,12 +45,15 @@ export default withRouter(class App extends Component {
         mainProtein: this.state.newMainProtein,
         submittedBy: this.state.currentUser
       }
-    }).then(newRecipe => {
-      this.setState(prevState => ({
-        recipes: [...prevState.recipes, newRecipe.data]
-      }));
+    })
+    .then(newRecipe => {
+      this.setState(prevState => (
+        {
+          recipes: [...prevState.recipes, newRecipe.data]
+        }
+      ))
       this.props.history.push(`/chapters/${newRecipe.data.mainProtein}/${newRecipe.data._id}`);
-    });
+    })
   }
   postNewIngredient = (e) => {
     axios({
@@ -70,22 +73,25 @@ export default withRouter(class App extends Component {
         this.props.history.push(`/recipe/${newRecipe.data._id}`)
       })
   }
-  putRecipe = () => {
+  putRecipe = (e) => {
+    e.preventDefault()
+    let proteinId = e.target.getAttribute('data-protein-id')
+    let recipeId = e.target.id
     axios({
       method: "PUT",
-      url: `${apiURL}/recipes`,
+      url: `${apiURL}/recipes/${e.target.id}`,
       data: {
         name: this.state.newRecipeName,
-        mainProtein: this.state.newMainProtein,
         directions: this.state.newDirections,
-        ingredients: this.state.newIngredients,
-        submittedBy: this.state.currentUser
+        ingredients: this.state.newIngredients
       }
-    }).then(newRecipe => {
-      this.setState(prevState => ({
-        recipes: [...prevState.recipes, newRecipe.data]
-      }));
-      this.props.history.push(`/chapters/${newRecipe.data.mainProtein}/${newRecipe.data._id}`);
+    }).then(res => {
+      this.setState(
+        {
+          recipes: res.data
+        }
+      )
+      this.props.history.push(`/chapters/${proteinId}/${recipeId}`)
     });
   }
   deleteRecipe = (e) => {
@@ -227,6 +233,7 @@ export default withRouter(class App extends Component {
         )
       })
   }
+  
   handleFormChange = e => {
     e.preventDefault()
     this.setState(
@@ -310,6 +317,8 @@ export default withRouter(class App extends Component {
                   handleDelete={this.deleteRecipe}
                   recipes={this.state.recipes}
                   currentUser={this.state.currentUser}
+                  handleUpdateRecipe={this.putRecipe}
+                  handleFormChange={this.handleFormChange}
                 />
               }
             />
