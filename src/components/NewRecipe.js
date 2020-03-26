@@ -1,17 +1,6 @@
 import React from 'react';
 
 export default function NewRecipe(props) {
-  // const listOfIngredients = recipeDetail.ingredients.map ( ingredient => {
-  //   return (
-  //   <li key={ingredients._id}>
-  //     {ingredient.item} {' '}
-  //     <button
-  //       id = {props.recipeDetail._id}
-  //       onClick = {props.deleteItem}
-  //     ></button>
-  //   </li>
-  //   )
-  // })
   return (
     <div >
       <form
@@ -32,13 +21,12 @@ export default function NewRecipe(props) {
         <p></p>
       </form>
       <form
-          onSubmit={props.postNewIngredient}
-          onChange={props.handleFormChange}
-        >
-          <input type="text" name="newIngredient" placeholder="add ingredient w/amount (ex: 1Cup brown sugar)" size='42'/>
-          <input type='submit' value='Add'/>
-          
-          </form>
+        onSubmit={props.postNewIngredient}
+        onChange={props.handleFormChange}
+      >
+        <input type="text" name="newIngredient" placeholder="add ingredient w/amount (ex: 1Cup brown sugar)" size='42'/>
+        <input type='submit' value='Add'/>
+      </form>
     </div>
   )
 }

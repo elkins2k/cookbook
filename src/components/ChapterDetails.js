@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default function ChapterDetails(props) {
@@ -12,11 +12,10 @@ export default function ChapterDetails(props) {
         </div>
       )
     }
-})
-
-return (
-  <div>
-    {matchingRecipes}
-  </div>
-)
+  })
+  return (
+    <div>
+      {matchingRecipes}
+    </div>
+  )
 }

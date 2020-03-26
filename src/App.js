@@ -43,14 +43,13 @@ export default withRouter(class App extends Component {
       data: {
         name: this.state.newRecipeName,
         mainProtein: this.state.newMainProtein,
-        directions: this.state.newDirections,
-        ingredients: this.state.newIngredients,
+        submittedBy: this.state.currentUser
       }
     }).then(newRecipe => {
       this.setState(prevState => ({
         recipes: [...prevState.recipes, newRecipe.data]
       }));
-      this.props.history.push("/recipes/:id");
+      this.props.history.push(`/chapters/${newRecipe.data.mainProtein}/${newRecipe.data._id}`);
     });
   }
   postNewIngredient = (e) => {
@@ -70,6 +69,24 @@ export default withRouter(class App extends Component {
         this.getRecipes()
         this.props.history.push(`/recipe/${newRecipe.data._id}`)
       })
+  }
+  putRecipe = () => {
+    axios({
+      method: "PUT",
+      url: `${apiURL}/recipes`,
+      data: {
+        name: this.state.newRecipeName,
+        mainProtein: this.state.newMainProtein,
+        directions: this.state.newDirections,
+        ingredients: this.state.newIngredients,
+        submittedBy: this.state.currentUser
+      }
+    }).then(newRecipe => {
+      this.setState(prevState => ({
+        recipes: [...prevState.recipes, newRecipe.data]
+      }));
+      this.props.history.push(`/chapters/${newRecipe.data.mainProtein}/${newRecipe.data._id}`);
+    });
   }
   deleteRecipe = (e) => {
     e.preventDefault()
@@ -166,7 +183,7 @@ export default withRouter(class App extends Component {
             }
           )
         })
-    } else if (this.state.newLastName) {
+    } if (this.state.newLastName) {
       axios({
         method: 'put',
         url: `${apiURL}/users/${e.target.id}`,
@@ -180,7 +197,7 @@ export default withRouter(class App extends Component {
             }
           )
         })
-    } else if (this.state.newEmail) {
+    } if (this.state.newEmail) {
       axios({
         method: 'put',
         url: `${apiURL}/users/${e.target.id}`,
@@ -247,7 +264,7 @@ export default withRouter(class App extends Component {
         <main>
           <Switch>
             <Route
-              exact path='/'
+              exact path='/user'
               render={
                 () => <Login
                   users={this.state.users}
@@ -292,6 +309,7 @@ export default withRouter(class App extends Component {
                   {...routerProps}
                   handleDelete={this.deleteRecipe}
                   recipes={this.state.recipes}
+                  currentUser={this.state.currentUser}
                 />
               }
             />
@@ -308,7 +326,7 @@ export default withRouter(class App extends Component {
             <Route
               path='*'
               render={
-                () => <Redirect to='/' />
+                () => <Redirect to='/user' />
               }
             />
           </Switch>

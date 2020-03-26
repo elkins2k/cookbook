@@ -1,15 +1,41 @@
 import React from 'react';
 
 export default function RecipeDetails (props) {
-  console.log (props)
   const recipeDetail = props.recipes.find(recipe => 
     recipe._id === props.match.params.recipeId
   )
-  console.log (recipeDetail)
   const ingredients = recipeDetail.ingredients.map (ingredient => {
-    return (
-      <li key={ingredient._id}>{ingredient.item}</li>
-    )
+    if (props.currentUser === recipeDetail.submittedBy || recipeDetail.submitted === '' ) {
+      return (
+      <li key={ingredient._id}>
+        {ingredient.item}
+        <button
+         id = {recipeDetail._id}
+         onClick = {props.deleteItem}
+        >
+          del
+        </button>
+      </li>
+      )
+    } else {
+      return (
+        <li key={ingredient._id}>
+          {ingredient.item}
+        </li>
+        )
+    }
+  })
+  const deleteRecipe = (() => {
+    if (props.currentUser === recipeDetail.submittedBy || recipeDetail.submitted === '' ) {
+      return (
+        <button 
+        id={recipeDetail._id}
+        onClick={props.handleDelete}
+      >
+        Delete Recipe
+      </button>
+      )
+    }
   })
   return (
     <div>
@@ -22,12 +48,10 @@ export default function RecipeDetails (props) {
       <h3>
         Directions: {recipeDetail.directions}
       </h3>
-      <button 
-        id={recipeDetail._id}
-        onClick={props.handleDelete}
-      >
-        Delete Recipe
-      </button>
+      {deleteRecipe}
+      <p>
+        submitted by: {recipeDetail.submittedBy}
+      </p>
     </div>
   )
 }
