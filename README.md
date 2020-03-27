@@ -61,10 +61,9 @@ The cookbok front ent application wll be created in the new folder created above
 npx react-create-app cookbook
 ```
 
-Frontend Components
-
+### Frontend Components
  
-LOGIN
+### LOGIN
 ```js
 import React from 'react';
 
