@@ -14,7 +14,7 @@ const apiURL = process.env.REACT_APP_BACKEND_APP_URL || 'http://localhost:8080/a
 
 export default withRouter(class App extends Component {
   constructor(props) {
-    super()
+    super(props)
     this.state = {
       recipes: [],
       chapters: [],
@@ -55,24 +55,6 @@ export default withRouter(class App extends Component {
       this.props.history.push(`/chapters/${newRecipe.data.mainProtein}/${newRecipe.data._id}`);
     })
   }
-  // postNewIngredient = (e) => {
-  //   axios({
-  //     method: 'POST',
-  //     url: `${apiURL}/${e.target.id}/newIngredient`,
-  //     data: {
-  //       item: this.state.newIngredient
-  //     }
-  //   })
-  //     .then(newRecipe => {
-  //       this.setState(
-  //         {
-  //           newIngredient: ''
-  //         }
-  //       )
-  //       this.getRecipes()
-  //       this.props.history.push(`/recipe/${newRecipe.data._id}`)
-  //     })
-  // }
   putRecipe = (e) => {
     e.preventDefault()
     let proteinId = e.target.getAttribute('data-protein-id')
@@ -234,7 +216,7 @@ export default withRouter(class App extends Component {
       })
   }
   
-  handleFormChange = e => {
+  handleFormChange = (e) => {
     e.preventDefault()
     this.setState(
       {
@@ -333,7 +315,6 @@ export default withRouter(class App extends Component {
                 () => <NewRecipe
                   handleFormChange={this.handleFormChange}
                   handleNewRecipe={this.postRecipe}
-                  // postNewIngredient = {this.postNewIngredient}
                 />
               }
             />
