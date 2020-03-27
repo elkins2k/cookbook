@@ -253,6 +253,11 @@ export default withRouter(class App extends Component {
       <div className="App">
         <header className="App-header">
           <div>
+            <Link to='/'>
+              LogOut
+            </Link>
+          </div>
+          <div>
             <Link to={`/user/${this.state.user_id}`}>
               Welcome {this.state.currentUser}
             </Link>
