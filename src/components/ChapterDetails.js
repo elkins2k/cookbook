@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 export default function ChapterDetails(props) {
+  // eslint-disable-next-line
   const matchingRecipes = props.recipes.map ( (recipe,index) => {
     if (recipe.mainProtein === props.match.params.id) {
       return (

@@ -19,8 +19,7 @@ export default withRouter(class App extends Component {
       recipes: [],
       chapters: [],
       users: [],
-      user_id: '',
-      newIngredients: []
+      user_id: ''
     }
   }
 
@@ -306,6 +305,7 @@ export default withRouter(class App extends Component {
                   currentUser={this.state.currentUser}
                   handleUpdateRecipe={this.putRecipe}
                   handleFormChange={this.handleFormChange}
+                  chapters={this.state.chapters}
                 />
               }
             />
