@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 export default function Chapters(props) {
   const allChapters = props.chapters.map ( (chapter,index) => {
     return(
-      <div key={index}>
+      <h3 key={index}>
         <Link to = {`/chapters/${chapter._id}`}>
           {chapter.mainProtein}
         </Link>
-      </div>
+      </h3>
     )
   })
   return (

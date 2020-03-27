@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import axios from 'axios'
 import { withRouter, Link, Switch, Route, Redirect } from 'react-router-dom'
-import './App.css';
+import './App.css'
 
 import Login from './components/Login'
 import User from './components/User'
@@ -256,8 +256,7 @@ export default withRouter(class App extends Component {
         </header>
         <main>
           <Switch>
-            <Route
-              exact path='/user'
+            <Route exact path='/user'
               render={
                 () => <Login
                   users={this.state.users}
@@ -266,8 +265,7 @@ export default withRouter(class App extends Component {
                 />
               }
             />
-            <Route
-              path='/user/:id'
+            <Route path='/user/:id'
               render={
                 routerProps => <User
                   {...routerProps}
@@ -277,16 +275,14 @@ export default withRouter(class App extends Component {
                   handleDelete={this.deleteUser}
                 />
               }
-            /><Route
-              exact path='/chapters'
+            /><Route exact path='/chapters'
               render={
                 () => <Chapters
                   chapters={this.state.chapters}
                 />
               }
             />
-            <Route
-              exact path='/chapters/:id'
+            <Route exact path='/chapters/:id'
               render={
                 routerProps => <ChapterDetails
                   {...routerProps}
@@ -295,8 +291,7 @@ export default withRouter(class App extends Component {
                 />
               }
             />
-            <Route
-              exact path='/chapters/:id/:recipeId'
+            <Route exact path='/chapters/:id/:recipeId'
               render={
                 routerProps => <RecipeDetails
                   {...routerProps}
@@ -309,8 +304,7 @@ export default withRouter(class App extends Component {
                 />
               }
             />
-            <Route
-              exact path='/recipe/new'
+            <Route exact path='/recipe/new'
               render={
                 () => <NewRecipe
                   handleFormChange={this.handleFormChange}
@@ -318,8 +312,7 @@ export default withRouter(class App extends Component {
                 />
               }
             />
-            <Route
-              path='*'
+            <Route path='*'
               render={
                 () => <Redirect to='/user' />
               }

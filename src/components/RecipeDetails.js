@@ -4,7 +4,8 @@ export default function RecipeDetails (props) {
   const recipeDetail = props.recipes.find(recipe => 
     recipe._id === props.match.params.recipeId
   )
-  const proteinDetail = props.chapters.find(protein => protein._id === props.match.params.id)
+  const proteinDetail = props.chapters.find(protein =>
+    protein._id === props.match.params.id)
   if (props.currentUser === recipeDetail.submittedBy || !recipeDetail.submittedBy) {
     return (
       <div>
@@ -44,7 +45,7 @@ export default function RecipeDetails (props) {
           Name: {recipeDetail.name}
         </h2>
         <h3>
-          Main Protein: {recipeDetail.mainProtein}
+          Main Protein: {proteinDetail.mainProtein}
         </h3>
         <h3>
           Ingredients: {recipeDetail.ingredients}
